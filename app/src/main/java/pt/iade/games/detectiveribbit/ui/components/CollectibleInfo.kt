@@ -28,7 +28,8 @@ import pt.iade.games.detectiveribbit.ui.theme.PurpleGrey40
 
 @Composable
 fun CollectibleInfo(
-    collectible: Collectible
+    collectible: Collectible,
+    onClick: () -> Unit = {}
 ){
     Box(
         modifier = Modifier
@@ -46,7 +47,7 @@ fun CollectibleInfo(
                     fontSize = 30.sp
                 )
                 Button(
-                    onClick = {},
+                    onClick = onClick,
                     modifier = Modifier.padding(start = 20.dp)
                 ) {
                     Text(

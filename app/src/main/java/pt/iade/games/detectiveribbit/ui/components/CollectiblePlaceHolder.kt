@@ -22,13 +22,13 @@ import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun CollectiblePlaceHolder(
-    collectible: Collectible
+    collectible: Collectible,
+    onClick: () -> Unit = {}
 ){
     val context = LocalContext.current
     if (collectible.isunlocked) {
         Card(
-            onClick = {
-            }
+            onClick = onClick
         ) {
             Column(
                 modifier = Modifier.padding(5.dp),
@@ -65,7 +65,10 @@ fun CollectiblePlaceHolder(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .size((collectible.placeholderSize * 60).dp)
-                        .padding(bottom = 4.dp)
+                )
+                Text(
+                    text = "",
+                    fontSize = (collectible.placeholderSize * 17).sp
                 )
             }
         }
