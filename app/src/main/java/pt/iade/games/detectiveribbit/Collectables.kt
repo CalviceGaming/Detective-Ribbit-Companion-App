@@ -132,10 +132,16 @@ fun Collectibles() {
     }
 
     if (collect != null && showPopup) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
         CollectibleInfo(collect!!, onClick = {
             showPopup = false
             collect = null
         })
+            }
     }
 }
 
