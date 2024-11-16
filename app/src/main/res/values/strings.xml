@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Detective Ribbit</string>
+    <string name="title_activity_collectables">Collectables</string>
 </resources>
