@@ -65,6 +65,20 @@ fun MainView() {
         ) {
             Text(text = "Collectables")
         }
+
+
+
+        // Button to increase progress
+        Button(
+            onClick = {
+                // Create an Intent to start the Collectables activity
+                val intent = Intent(context, Puzzles::class.java)
+                // Start the new activity
+                context.startActivity(intent)
+            }
+        ) {
+            Text(text = "Puzzle")
+        }
     }
 }
 
