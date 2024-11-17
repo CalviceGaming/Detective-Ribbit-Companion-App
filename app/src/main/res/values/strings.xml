@@ -2,4 +2,5 @@
     <string name="app_name">Detective Ribbit</string>
     <string name="title_activity_collectables">Collectables</string>
     <string name="title_activity_puzzles">Puzzles</string>
+    <string name="title_activity_evidence_board">EvidenceBoard</string>
 </resources>

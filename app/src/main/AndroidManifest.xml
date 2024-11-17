@@ -13,6 +13,11 @@
         android:theme="@style/Theme.DetectiveRibbit"
         tools:targetApi="31">
         <activity
+            android:name=".ui.EvidenceBoard"
+            android:exported="false"
+            android:label="@string/title_activity_evidence_board"
+            android:theme="@style/Theme.DetectiveRibbit" />
+        <activity
             android:name=".Puzzles"
             android:exported="false"
             android:label="@string/title_activity_puzzles"

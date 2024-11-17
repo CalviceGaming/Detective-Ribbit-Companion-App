@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
@@ -22,7 +23,7 @@ import pt.iade.games.detectiveribbit.models.Collectible
 @Composable
 fun Evidence(
     collectible: Collectible,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ){
     if (collectible.isunlocked) {
         Card(
@@ -42,8 +43,8 @@ fun Evidence(
 
 @Preview
 @Composable
-fun EvidencePreview(){
-    Column {
+fun EvidencePreview() {
+    Row {
         Evidence(
             collectible = Collectible(
                 id = 1,

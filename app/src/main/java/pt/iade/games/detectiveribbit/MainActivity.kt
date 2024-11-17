@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import pt.iade.games.detectiveribbit.ui.components.RibbitProgressBar
 import pt.iade.games.detectiveribbit.ui.theme.DetectiveRibbitTheme
 import androidx.compose.ui.platform.LocalContext
+import pt.iade.games.detectiveribbit.ui.EvidenceBoard
 
 
 class MainActivity : ComponentActivity() {
@@ -51,10 +52,10 @@ fun MainView() {
         RibbitProgressBar();
 
 
-        Spacer(modifier = Modifier.height(25.dp)) // Add space between the progress bar and the button
+        Spacer(modifier = Modifier.height(35.dp)) // Add space between the progress bar and the button
 
 
-        // Button to increase progress
+        // Button to go to the Collectables page
         Button(
             onClick = {
                 // Create an Intent to start the Collectables activity
@@ -68,7 +69,7 @@ fun MainView() {
 
 
 
-        // Button to increase progress
+        // Button to go to the Puzzle page
         Button(
             onClick = {
                 // Create an Intent to start the Collectables activity
@@ -78,6 +79,18 @@ fun MainView() {
             }
         ) {
             Text(text = "Puzzle")
+        }
+
+        // Button to go to the Evidence Board page
+        Button(
+            onClick = {
+                // Create an Intent to start the Collectables activity
+                val intent = Intent(context, EvidenceBoard::class.java)
+                // Start the new activity
+                context.startActivity(intent)
+            }
+        ) {
+            Text(text = "Evidence Board")
         }
     }
 }
