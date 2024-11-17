@@ -131,7 +131,6 @@ fun Collectibles() {
         }
     }
 
-    // Button to increase progress
     Button(
         onClick = {
             // Create an Intent to start the Collectables activity
