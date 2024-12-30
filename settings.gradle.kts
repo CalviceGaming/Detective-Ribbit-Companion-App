@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Detective Ribbit"
+rootProject.name = "DetectiveRibbitLayout"
 include(":app")
  

@@ -2,16 +2,67 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnOpenActivityPuzzle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Puzzle"
+    <ImageView
+        android:id="@+id/logoMainPage"
+        android:layout_width="338dp"
+        android:layout_height="274dp"
+        android:layout_marginTop="68dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <ImageButton
+        android:id="@+id/evidenceButton"
+        android:layout_width="338dp"
+        android:layout_height="99dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="18dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/buttonevidance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressButton" />
+
+    <ImageButton
+        android:id="@+id/progressButton"
+        android:layout_width="338dp"
+        android:layout_height="99dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/buttonprogress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logoMainPage" />
+
+    <ImageButton
+        android:id="@+id/collectablesButton"
+        android:layout_width="338dp"
+        android:layout_height="99dp"
+        android:layout_marginTop="18dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/button_collectables"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/evidenceButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
