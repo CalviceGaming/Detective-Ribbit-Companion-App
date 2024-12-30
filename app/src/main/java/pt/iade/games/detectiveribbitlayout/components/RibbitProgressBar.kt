@@ -1,4 +1,4 @@
-package pt.iade.games.detectiveribbitlayout
+package pt.iade.games.detectiveribbitlayout.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
+import pt.iade.games.detectiveribbitlayout.R
 
 @Composable
 fun RibbitProgressBar() {
