@@ -8,25 +8,28 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.compose.ui.platform.ComposeView
 
 class ProgressActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_progress)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-//setting background
+
         val rootView: View = findViewById(android.R.id.content)
         rootView.setBackgroundResource(R.drawable.background_progress)
-//back-menu button
+
+        // Configure the back button
         val backButton: ImageButton = findViewById(R.id.backButton)
         backButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+
+        // Set up the ComposeView to display the RibbitProgressBar
+        val composeView = findViewById<ComposeView>(R.id.compose_view)
+        composeView.setContent {
+            RibbitProgressBar() // Your Composable function
         }
     }
 }
