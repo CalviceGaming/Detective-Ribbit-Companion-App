@@ -47,13 +47,10 @@ class MainActivity : AppCompatActivity() {
 
         var collectibles: MutableList<Collectible> = mutableListOf()
 
-        apiRequests.GetCollectibles(
+        apiRequests.GetEvidences(
             onSuccess = {collectiblesRecived ->
-
-                collectibles = collectiblesRecived
-
-
-                Log.v("aaaaaaaaa", collectibles[0].name)
+                Log.v("MainActivity", collectiblesRecived[0].name)
+                apiRequests.saveEvidencesToFile(this, collectiblesRecived)
             },
             onFailure = {}
         )

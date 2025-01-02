@@ -5,34 +5,17 @@ import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.json.responseJson
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import pt.iade.games.detectiveribbitlayout.models.Collectible
+import pt.iade.games.detectiveribbitlayout.models.Evidence
 import java.io.File
 
 class APIRequest {
-    val url = "http://10.0.2.2:3000/collectibles/get?playerId=1"
+    val url = "http://10.0.2.2:3000/evidences/get?playerId=1"
 
-    fun makeGetRequest(callback: (String?) -> Unit) {
-
-        // Make the GET request
-        Fuel.get(url)
-            .responseJson { request, response, result ->
-                // Handle the result
-                result.fold(
-                    success = { json ->
-                        Log.d("APIRequests", "Response: ${json.obj()}")
-                        callback(json.obj().toString()) // Pass the response back via callback
-                    },
-                    failure = { error ->
-                        Log.e("APIRequests", "Error: ${error.message}")
-                        callback(null) // Pass null in case of an error
-                    }
-                )
-            }
-    }
-
-    public fun GetCollectibles(
-        onSuccess: (collectables: MutableList<Collectible>) -> Unit,
+    fun GetEvidences(
+        onSuccess: (evidences: MutableList<Evidence>) -> Unit,
         onFailure: () -> Unit,
     ) {
         Fuel.get(url)
@@ -42,40 +25,35 @@ class APIRequest {
                 //println("Response: $response")
                 val (json, error) = result
                 if (json != null) {
-                    Log.d("APIRequests", "All Challenges Succeeded");
+                    Log.d("APIRequests", "All Evidences Succeeded");
 
                     //loop stuff
                     var i = 0;
                     val responseArr = json.array();
                     val responseLength = responseArr.length();
 
-                    var collectibe: Collectible;
+                    var evidence: Evidence;
 
                     //list to send back
-                    var collectibles: MutableList<Collectible> = mutableListOf()
+                    var evidences: MutableList<Evidence> = mutableListOf()
 
-                    while (i < responseLength) {
+                    for (i in 0 until responseLength){
                         var currString = responseArr[i].toString()
                         val currJsonObject = JSONObject(currString)
 
 
-                        collectibe = Collectible(
-                            id = currJsonObject.getInt("collectibles_id"),
-                            name = currJsonObject.getString("collectibles_name"),
-                            image = 1,
-                            description = currJsonObject.getString("collectibles_description"),
-                            placeholderSize = 1,
-                            isunlocked = true
+                        evidence = Evidence(
+                            id = currJsonObject.getInt("evidence_id"),
+                            name = currJsonObject.getString("evidence_name"),
+                            description = currJsonObject.getString("evidence_description")
                         )
 
-                        collectibles.add(i, collectibe);
-
-                        i++;
+                        evidences.add(i, evidence);
                     }
 
                     onSuccess(
                         //on success stuff sent back
-                        collectibles
+                        evidences
                     )
                 }else{
                     Log.e("APIRequests", "Error: ${error?.message}")
@@ -83,9 +61,21 @@ class APIRequest {
             }
     }
 
-    fun saveCollectiblesToFile(context: Context, collectibles: List<Collectible>) {
-        val file = File(context.filesDir, "collectibles.json")
+    fun saveEvidencesToFile(context: Context, evidences: List<Evidence>) {
+        val file = File(context.filesDir, "evidences.json")
         val gson = Gson()
-        file.writeText(gson.toJson(collectibles))
+        Log.v("API", evidences[0].name)
+        file.writeText(gson.toJson(evidences))
+    }
+
+    fun loadEvidencesFromFile(context: Context): List<Evidence>? {
+        val file = File(context.filesDir, "evidences.json")
+        return if (file.exists()) {
+            val gson = Gson()
+            val type = object : TypeToken<List<Evidence>>() {}.type
+            gson.fromJson(file.readText(), type)
+        } else {
+            null
+        }
     }
 }

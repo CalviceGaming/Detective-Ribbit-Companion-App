@@ -2,6 +2,7 @@ package pt.iade.games.detectiveribbitlayout
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import pt.iade.games.detectiveribbitlayout.components.CollectiblesComposable
+import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
 
 class CollectablesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

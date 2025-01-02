@@ -2,12 +2,16 @@ package pt.iade.games.detectiveribbitlayout
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
 
 class EvidanceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,5 +31,32 @@ class EvidanceActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+        val viewGroup:ViewGroup = findViewById(R.id.main)
+
+
+        val apiRequests = APIRequest()
+
+        val savedCollectibles = apiRequests.loadEvidencesFromFile(this)
+
+        for (i in 0 until savedCollectibles!!.size){
+            Log.v("EvidencesActivity", savedCollectibles[i].name)
+        }
+
+        for (i in 0 until viewGroup.childCount) {
+            val child = viewGroup.getChildAt(i)
+            if (child is ImageView && child !is ImageButton) {
+                val tagValue = child.tag
+                for (k in savedCollectibles.indices){
+                    if (tagValue == savedCollectibles[k].name) {
+                        // Make the ImageView visible if it matches a certain tag
+                        child.visibility = View.VISIBLE
+                        Log.d("ImageView Update", "$tagValue made visible")
+                    }
+                }
+            }
+        }
+
+
     }
 }
