@@ -56,4 +56,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.fuel.v231)
+    implementation(libs.fuel.android)
+    implementation(libs.fuel.json)
+    implementation(libs.gson)
+
 }

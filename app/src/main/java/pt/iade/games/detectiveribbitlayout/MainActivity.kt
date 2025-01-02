@@ -2,12 +2,15 @@ package pt.iade.games.detectiveribbitlayout
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
+import pt.iade.games.detectiveribbitlayout.models.Collectible
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,10 +22,11 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-//setting background
+        // Setting background
         val rootView: View = findViewById(android.R.id.content)
         rootView.setBackgroundResource(R.drawable.homepage_background)
-//<editor-fold desc="Buttons setup">
+
+        // Buttons setup
         val evidenceButton: ImageButton = findViewById(R.id.evidenceButton)
         evidenceButton.setOnClickListener {
             val intent = Intent(this, EvidanceActivity::class.java)
@@ -35,9 +39,23 @@ class MainActivity : AppCompatActivity() {
         }
         val progressButton: ImageButton = findViewById(R.id.progressButton)
         progressButton.setOnClickListener {
-            val intent = Intent(this, ProgressActivity ::class.java)
+            val intent = Intent(this, ProgressActivity::class.java)
             startActivity(intent)
         }
-//</editor-fold>
+
+        val apiRequests = APIRequest()
+
+        var collectibles: MutableList<Collectible> = mutableListOf()
+
+        apiRequests.GetCollectibles(
+            onSuccess = {collectiblesRecived ->
+
+                collectibles = collectiblesRecived
+
+
+                Log.v("aaaaaaaaa", collectibles[0].name)
+            },
+            onFailure = {}
+        )
     }
 }
