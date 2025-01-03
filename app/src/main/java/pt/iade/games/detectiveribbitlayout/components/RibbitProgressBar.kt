@@ -1,5 +1,7 @@
 package pt.iade.games.detectiveribbitlayout.components
 
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,9 +25,9 @@ import androidx.compose.material3.Text
 import pt.iade.games.detectiveribbitlayout.R
 
 @Composable
-fun RibbitProgressBar() {
+fun RibbitProgressBar(Steps: Int) {
     // State to manage progress
-    val currentProgress = remember { mutableStateOf(0.5f) }
+    val currentProgress = remember { mutableStateOf(Steps.toInt()/100f) }
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val PurpleGrey40 = colorResource(id = R.color.purple)
 
