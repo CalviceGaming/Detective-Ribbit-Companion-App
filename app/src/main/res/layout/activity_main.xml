@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,16 +6,88 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- Logo -->
     <ImageView
         android:id="@+id/logoMainPage"
         android:layout_width="338dp"
         android:layout_height="274dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
+
+    <!-- EditText for code input -->
+    <EditText
+        android:id="@+id/codeInput"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:autofillHints=""
+        android:background="@drawable/textbox_background"
+        android:hint="@string/enter_code_here"
+        android:inputType="text"
+        android:padding="10dp"
+        android:textColorHint="@android:color/black"
+        android:paddingStart="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/sendButtonContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logoMainPage"
+        tools:ignore="RtlSymmetry" />
+
+    <!-- FrameLayout for Send button with text on top -->
+    <FrameLayout
+        android:id="@+id/sendButtonContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/codeInput"
+        android:layout_marginTop="7dp">
+
+        <!-- ImageButton with smaller size -->
+        <ImageButton
+            android:id="@+id/sendButton"
+            android:layout_width="179dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/send_button_background" />
+
+        <!-- Text on top of the ImageButton -->
+        <TextView
+            android:id="@+id/buttonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/progressButton"
+        android:layout_width="338dp"
+        android:layout_height="99dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="18dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/buttonprogress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sendButtonContainer" />
 
     <ImageButton
         android:id="@+id/evidenceButton"
@@ -33,22 +104,6 @@
         app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressButton" />
-
-    <ImageButton
-        android:id="@+id/progressButton"
-        android:layout_width="338dp"
-        android:layout_height="99dp"
-        android:layout_margin="16dp"
-        android:layout_marginTop="10dp"
-        android:adjustViewBounds="true"
-        android:background="@null"
-        android:contentDescription="@null"
-        android:scaleType="fitCenter"
-        android:src="@drawable/buttonprogress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logoMainPage" />
 
     <ImageButton
         android:id="@+id/collectablesButton"

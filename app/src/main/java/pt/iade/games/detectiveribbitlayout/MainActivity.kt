@@ -4,14 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.FragmentContainer
 import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
 import pt.iade.games.detectiveribbitlayout.controllers.Saves
-import pt.iade.games.detectiveribbitlayout.models.Collectible
 import pt.iade.games.detectiveribbitlayout.models.Player
 
 class MainActivity : AppCompatActivity() {
@@ -24,57 +26,91 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         // Setting background
         val rootView: View = findViewById(android.R.id.content)
         rootView.setBackgroundResource(R.drawable.homepage_background)
 
-        // Buttons setup
-        val evidenceButton: ImageButton = findViewById(R.id.evidenceButton)
-        evidenceButton.setOnClickListener {
-            val intent = Intent(this, EvidanceActivity::class.java)
-            startActivity(intent)
-        }
-        val collectablesButton: ImageButton = findViewById(R.id.collectablesButton)
-        collectablesButton.setOnClickListener {
-            val intent = Intent(this, CollectablesActivity::class.java)
-            startActivity(intent)
-        }
+        // Buttons
         val progressButton: ImageButton = findViewById(R.id.progressButton)
         progressButton.setOnClickListener {
             val intent = Intent(this, ProgressActivity::class.java)
             startActivity(intent)
         }
 
-        val apiRequests = APIRequest()
+        val evidenceButton: ImageButton = findViewById(R.id.evidenceButton)
+        val collectablesButton: ImageButton = findViewById(R.id.collectablesButton)
+        val sendButtonContainer: FrameLayout = findViewById(R.id.sendButtonContainer)
+
+        val sendButton: ImageButton = findViewById(R.id.sendButton)
+        val textInput: EditText = findViewById(R.id.codeInput)
         val saves = Saves()
-        saves.savePlayerToFile(this, Player(id = 0, code = 0))
+        // API call to get player data
+        val apiRequests = APIRequest()
 
 
-        apiRequests.GetPlayerId(
-            code = 69,
-            onSuccess = {playerReceived ->
-                Log.v("MainActivity", playerReceived.toString())
-                saves.savePlayerToFile(this, playerReceived)
+        sendButton.setOnClickListener {
+            val userInput = textInput.text.toString()
+            Log.d("MainActivity", "User input: $userInput")
 
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                //THIS IS NOT TO BE HERE, IT WILL BE ON THE CODE ACTIVITY
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                val savedPlayer = saves.loadPlayerFromFile(this)
+            apiRequests.GetPlayerId(
+                code = userInput.toInt(),
+                onSuccess = { playerReceived ->
+                    Log.v("MainActivity", playerReceived.toString())
+                    saves.savePlayerToFile(this, playerReceived)
+                    // Check again after saving player
+                    evidenceButton.visibility = View.VISIBLE
+                    collectablesButton.visibility = View.VISIBLE
+                    // Hide the EditText and Send button after player is saved
+                    textInput.visibility = View.GONE
+                    sendButtonContainer.visibility = View.GONE
+                    apiRequests.GetEvidences(
+                        playerId = playerReceived.id,
+                        onSuccess = {collectiblesReceived ->
+                            Log.v("MainActivity", collectiblesReceived.toString())
+                            saves.saveEvidencesToFile(this, collectiblesReceived)
+                        },
+                        onFailure = {}
+                    )
+                },
+                onFailure = {}
+            )
+        }
 
-                apiRequests.GetEvidences(
-                    playerId = savedPlayer!!.id,
-                    onSuccess = {collectiblesReceived ->
-                        Log.v("MainActivity", collectiblesReceived.toString())
-                        saves.saveEvidencesToFile(this, collectiblesReceived)
-                    },
-                    onFailure = {}
-                )
+        // Check if player exists
+        val savedPlayer = saves.loadPlayerFromFile(this)  // Check if player is saved
 
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            },
-            onFailure = {}
-        )
+        if (savedPlayer != null) {
+            // If player exists, show the evidence and collectables buttons, hide the EditText and Send button
+            evidenceButton.visibility = View.VISIBLE
+            collectablesButton.visibility = View.VISIBLE
+            textInput.visibility = View.GONE
+            sendButton.visibility = View.GONE
 
+            apiRequests.GetEvidences(
+                playerId = savedPlayer.id,
+                onSuccess = {collectiblesReceived ->
+                    Log.v("MainActivity", collectiblesReceived.toString())
+                    saves.saveEvidencesToFile(this, collectiblesReceived)
+                },
+                onFailure = {}
+            )
+        } else {
+            // If player doesn't exist, hide the evidence and collectables buttons
+            evidenceButton.visibility = View.GONE
+            collectablesButton.visibility = View.GONE
+        }
+
+        // Set up buttons' click listeners
+        evidenceButton.setOnClickListener {
+            val intent = Intent(this, EvidanceActivity::class.java)
+            startActivity(intent)
+        }
+
+        collectablesButton.setOnClickListener {
+            val intent = Intent(this, CollectablesActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

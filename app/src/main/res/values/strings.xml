@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DetectiveRibbitLayout</string>
+    <string name="enter_code_here">Enter Code here</string>
 </resources>

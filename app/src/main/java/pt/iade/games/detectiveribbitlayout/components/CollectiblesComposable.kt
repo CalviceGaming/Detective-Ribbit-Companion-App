@@ -22,19 +22,23 @@ import pt.iade.games.detectiveribbitlayout.models.Evidence
 
 @Composable
 fun CollectiblesComposable(
-    collectiblesFromSave: List<Collectible>
+    collectiblesFromSave: List<Collectible>? // Mark as nullable
 ) {
+    // Check if the list is null or empty
+    val collectibles = collectiblesFromSave?.takeIf { it.isNotEmpty() } ?: emptyList()
+
     var collect by remember { mutableStateOf<Collectible?>(null) }
     var showPopup by remember { mutableStateOf(false) }
 
-    val collectibles = listOf(
+    val predefinedCollectibles = listOf(
         Collectible(1, "Frog Statue", R.drawable.ribbitstatue, "A good looking statue that makes the apartment look better", 1, false),
         Collectible(2, "Something", R.drawable.ribbit, "Something Something that Something", 1, false)
         // Add more collectibles as needed
     )
 
-    for (collectible in collectibles) {
-        if (collectiblesFromSave.any { it.id == collectible.id }) {
+    // Update the predefined collectibles based on the saved ones
+    for (collectible in predefinedCollectibles) {
+        if (collectibles.any { it.id == collectible.id }) {
             collectible.isUnlocked = true
         }
     }
@@ -46,8 +50,8 @@ fun CollectiblesComposable(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.padding(16.dp)
         ) {
-            items(collectibles.size) { index ->
-                val collectible = collectibles[index]
+            items(predefinedCollectibles.size) { index ->
+                val collectible = predefinedCollectibles[index]
                 CollectiblePlaceHolder(
                     collectible = collectible,
                     onClick = {
@@ -71,3 +75,4 @@ fun CollectiblesComposable(
         }
     }
 }
+

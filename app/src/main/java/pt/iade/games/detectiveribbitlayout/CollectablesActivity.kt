@@ -46,7 +46,7 @@ class CollectablesActivity : AppCompatActivity() {
         // Set up ComposeView for collectibles
         val composeView = findViewById<ComposeView>(R.id.composeView)
         composeView.setContent {
-            CollectiblesComposable(savedCollectibles!!)
+            CollectiblesComposable(savedCollectibles)
         }
 
 

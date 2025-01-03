@@ -38,25 +38,27 @@ class EvidanceActivity : AppCompatActivity() {
         val saves = Saves()
 
         val savedCollectibles = saves.loadEvidencesFromFile(this)
+        if (savedCollectibles != null) {
 
-        for (i in 0 until savedCollectibles!!.size){
-            Log.v("EvidencesActivity", savedCollectibles[i].name)
-        }
 
-        for (i in 0 until viewGroup.childCount) {
-            val child = viewGroup.getChildAt(i)
-            if (child is ImageView && child !is ImageButton) {
-                val tagValue = child.tag
-                for (k in savedCollectibles.indices){
-                    if (tagValue == savedCollectibles[k].name) {
-                        // Make the ImageView visible if it matches a certain tag
-                        child.visibility = View.VISIBLE
-                        Log.d("ImageView Update", "$tagValue made visible")
+            for (i in 0 until savedCollectibles!!.size) {
+                Log.v("EvidencesActivity", savedCollectibles[i].name)
+            }
+
+            for (i in 0 until viewGroup.childCount) {
+                val child = viewGroup.getChildAt(i)
+                if (child is ImageView && child !is ImageButton) {
+                    val tagValue = child.tag
+                    for (k in savedCollectibles.indices) {
+                        if (tagValue == savedCollectibles[k].name) {
+                            // Make the ImageView visible if it matches a certain tag
+                            child.visibility = View.VISIBLE
+                            Log.d("ImageView Update", "$tagValue made visible")
+                        }
                     }
                 }
             }
         }
-
 
     }
 }
