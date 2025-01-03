@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import pt.iade.games.detectiveribbitlayout.models.Collectible
 import pt.iade.games.detectiveribbitlayout.models.Evidence
 import pt.iade.games.detectiveribbitlayout.models.Player
 import java.io.File
@@ -26,6 +27,26 @@ class Saves {
             null
         }
     }
+
+
+    fun saveCollectablesToFile(context: Context, collectables: List<Collectible>) {
+        val file = File(context.filesDir, "collectables.json")
+        val gson = Gson()
+        Log.v("saveCollectablesToFile", collectables.toString())
+        file.writeText(gson.toJson(collectables))
+    }
+
+    fun loadCollectablesFromFile(context: Context): List<Collectible>? {
+        val file = File(context.filesDir, "collectables.json")
+        return if (file.exists()) {
+            val gson = Gson()
+            val type = object : TypeToken<List<Collectible>>() {}.type
+            gson.fromJson(file.readText(), type)
+        } else {
+            null
+        }
+    }
+
 
 
     fun savePlayerToFile(context: Context, player: Player) {

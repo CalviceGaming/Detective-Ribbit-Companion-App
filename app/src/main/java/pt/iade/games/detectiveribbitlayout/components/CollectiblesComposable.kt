@@ -1,6 +1,7 @@
 package pt.iade.games.detectiveribbitlayout.components
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,17 +18,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import pt.iade.games.detectiveribbitlayout.R
 import pt.iade.games.detectiveribbitlayout.models.Collectible
+import pt.iade.games.detectiveribbitlayout.models.Evidence
 
 @Composable
-fun CollectiblesComposable() {
+fun CollectiblesComposable(
+    collectiblesFromSave: List<Collectible>
+) {
     var collect by remember { mutableStateOf<Collectible?>(null) }
     var showPopup by remember { mutableStateOf(false) }
 
     val collectibles = listOf(
-        Collectible(1, "Statue", R.drawable.ribbitstatue, "Found in the mafia Stackhouse.", 1, true),
-        Collectible(2, "Locked Item", R.drawable.lock, "Locked collectible.", 1, false)
+        Collectible(1, "Frog Statue", R.drawable.ribbitstatue, "A good looking statue that makes the apartment look better", 1, false),
+        Collectible(2, "Something", R.drawable.ribbit, "Something Something that Something", 1, false)
         // Add more collectibles as needed
     )
+
+    for (collectible in collectibles) {
+        if (collectiblesFromSave.any { it.id == collectible.id }) {
+            collectible.isUnlocked = true
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         LazyVerticalGrid(

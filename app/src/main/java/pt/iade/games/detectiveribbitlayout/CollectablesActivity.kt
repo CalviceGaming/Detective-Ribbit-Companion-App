@@ -37,25 +37,52 @@ class CollectablesActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val apiRequests = APIRequest()
+        val saves = Saves()
+
+        val savedCollectibles = saves.loadCollectablesFromFile(this)
+        Log.v("CollectablesActivity", savedCollectibles.toString())
+
         // Set up ComposeView for collectibles
         val composeView = findViewById<ComposeView>(R.id.composeView)
         composeView.setContent {
-            CollectiblesComposable()
+            CollectiblesComposable(savedCollectibles!!)
         }
 
-        val apiRequests = APIRequest()
-        val saves = Saves()
-        val savedPlayer = saves.loadPlayerFromFile(this)
 
-        if (savedPlayer!!.id != 0){
-            apiRequests.PostCollectibles(
-                playerId = savedPlayer.id,
-                collectible = Collectible(1, "Statue", R.drawable.ribbitstatue, "Found in the mafia Stackhouse.", 1, false),
-                onSuccess = {},
-                onFailure = {}
-            )
-        }else{
-            Log.d("CollectablesActivity", "There is no playerId")
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //THIS IS NOT TO BE HERE, IT WILL BE AT THE END OF THE MINI GAME
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        val button: ImageButton = findViewById(R.id.addCollectable) // Replace with your button's ID
+
+        button.setOnClickListener {
+            // Fetch the saved player
+            val savedPlayer = saves.loadPlayerFromFile(this)
+
+            // Create the hard-coded collectible
+            val hardCodedCollectable = Collectible(1, "Statue", R.drawable.ribbitstatue, "Found in the mafia Stackhouse.", 1, false)
+
+            // Check if the player ID is valid
+            if (savedPlayer!!.id != 0) {
+                apiRequests.PostCollectibles(
+                    playerId = savedPlayer.id,
+                    collectible = hardCodedCollectable,
+                    onSuccess = {
+                        // Safely modify and save the list of collectibles
+                        val updatedCollectibles = saves.loadCollectablesFromFile(this)?.toMutableList() ?: mutableListOf()
+                        updatedCollectibles.add(hardCodedCollectable)
+                        saves.saveCollectablesToFile(this, updatedCollectibles)
+                    },
+                    onFailure = {
+                        Log.d("CollectablesActivity", "Failed to post collectible.")
+                    }
+                )
+            } else {
+                Log.d("CollectablesActivity", "There is no playerId")
+            }
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

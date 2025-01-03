@@ -6,5 +6,5 @@ data class Collectible(
     val image: Int,
     val description: String,
     val placeholderSize: Int,
-    val isUnlocked: Boolean
+    var isUnlocked: Boolean
 )
