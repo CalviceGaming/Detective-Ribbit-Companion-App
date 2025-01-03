@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
+import pt.iade.games.detectiveribbitlayout.controllers.Saves
 
 class EvidanceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,10 +35,9 @@ class EvidanceActivity : AppCompatActivity() {
 
         val viewGroup:ViewGroup = findViewById(R.id.main)
 
+        val saves = Saves()
 
-        val apiRequests = APIRequest()
-
-        val savedCollectibles = apiRequests.loadEvidencesFromFile(this)
+        val savedCollectibles = saves.loadEvidencesFromFile(this)
 
         for (i in 0 until savedCollectibles!!.size){
             Log.v("EvidencesActivity", savedCollectibles[i].name)

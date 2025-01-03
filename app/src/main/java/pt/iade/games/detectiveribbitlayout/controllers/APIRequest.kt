@@ -1,45 +1,60 @@
 package pt.iade.games.detectiveribbitlayout.controllers
 
-import android.content.Context
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.json.responseJson
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import pt.iade.games.detectiveribbitlayout.models.Collectible
 import pt.iade.games.detectiveribbitlayout.models.Evidence
-import java.io.File
 
 class APIRequest {
-    val url = "http://10.0.2.2:3000/evidences/get?playerId=1"
+    val url = "http://10.0.2.2:3000"
 
-    fun GetEvidences(
-        onSuccess: (evidences: MutableList<Evidence>) -> Unit,
+    fun PostCollectibles(
+        playerId: Int,
+        collectible: Collectible,
+        onSuccess: () -> Unit,
         onFailure: () -> Unit,
     ) {
-        Fuel.get(url)
+        Fuel.post("$url/collectibles/add?playerId=$playerId&collectibleId=${collectible.id}")
             .timeout(5000)
             .responseJson { request, response, result ->
                 //println("Request: $request")
                 //println("Response: $response")
                 val (json, error) = result
                 if (json != null) {
-                    Log.d("APIRequests", "All Evidences Succeeded");
+                    Log.d("PostCollectibles", "Collectible Send successfully")
+                    onSuccess()
+                }else{
+                    Log.e("PostCollectibles", "Error: ${error?.response}")
+                }
+            }
+    }
+
+    fun GetEvidences(
+        playerId: Int,
+        onSuccess: (evidences: MutableList<Evidence>) -> Unit,
+        onFailure: () -> Unit,
+    ) {
+        Fuel.get("$url/evidences/get?playerId=$playerId")
+            .timeout(5000)
+            .responseJson { request, response, result ->
+                //println("Request: $request")
+                //println("Response: $response")
+                val (json, error) = result
+                if (json != null) {
+                    Log.d("GetEvidences", "All Evidences Succeeded");
 
                     //loop stuff
-                    var i = 0;
                     val responseArr = json.array();
-                    val responseLength = responseArr.length();
 
                     var evidence: Evidence;
 
                     //list to send back
                     var evidences: MutableList<Evidence> = mutableListOf()
 
-                    for (i in 0 until responseLength){
-                        var currString = responseArr[i].toString()
-                        val currJsonObject = JSONObject(currString)
+                    for (i in 0 until responseArr.length()){
+                        val currJsonObject = JSONObject(responseArr[i].toString())
 
 
                         evidence = Evidence(
@@ -56,26 +71,8 @@ class APIRequest {
                         evidences
                     )
                 }else{
-                    Log.e("APIRequests", "Error: ${error?.message}")
+                    Log.e("GetEvidences", "Error: ${error?.message}")
                 }
             }
-    }
-
-    fun saveEvidencesToFile(context: Context, evidences: List<Evidence>) {
-        val file = File(context.filesDir, "evidences.json")
-        val gson = Gson()
-        Log.v("API", evidences[0].name)
-        file.writeText(gson.toJson(evidences))
-    }
-
-    fun loadEvidencesFromFile(context: Context): List<Evidence>? {
-        val file = File(context.filesDir, "evidences.json")
-        return if (file.exists()) {
-            val gson = Gson()
-            val type = object : TypeToken<List<Evidence>>() {}.type
-            gson.fromJson(file.readText(), type)
-        } else {
-            null
-        }
     }
 }

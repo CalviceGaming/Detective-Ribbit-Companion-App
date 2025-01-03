@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
+import pt.iade.games.detectiveribbitlayout.controllers.Saves
 import pt.iade.games.detectiveribbitlayout.models.Collectible
 
 class MainActivity : AppCompatActivity() {
@@ -44,13 +45,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         val apiRequests = APIRequest()
-
-        var collectibles: MutableList<Collectible> = mutableListOf()
+        val saves = Saves()
 
         apiRequests.GetEvidences(
+            playerId = 1,
             onSuccess = {collectiblesRecived ->
-                Log.v("MainActivity", collectiblesRecived[0].name)
-                apiRequests.saveEvidencesToFile(this, collectiblesRecived)
+                Log.v("MainActivity", collectiblesRecived.toString())
+                saves.saveEvidencesToFile(this, collectiblesRecived)
             },
             onFailure = {}
         )
