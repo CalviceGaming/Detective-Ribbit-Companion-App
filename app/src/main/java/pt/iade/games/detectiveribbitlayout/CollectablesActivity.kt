@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import pt.iade.games.detectiveribbitlayout.components.CollectiblesComposable
 import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
+import pt.iade.games.detectiveribbitlayout.controllers.Saves
 import pt.iade.games.detectiveribbitlayout.models.Collectible
 
 class CollectablesActivity : AppCompatActivity() {
@@ -43,12 +44,18 @@ class CollectablesActivity : AppCompatActivity() {
         }
 
         val apiRequests = APIRequest()
+        val saves = Saves()
+        val savedPlayer = saves.loadPlayerFromFile(this)
 
-        apiRequests.PostCollectibles(
-            playerId = 1,
-            collectible = Collectible(1, "Statue", R.drawable.ribbitstatue, "Found in the mafia Stackhouse.", 1, false),
-            onSuccess = {},
-            onFailure = {}
-        )
+        if (savedPlayer!!.id != 0){
+            apiRequests.PostCollectibles(
+                playerId = savedPlayer.id,
+                collectible = Collectible(1, "Statue", R.drawable.ribbitstatue, "Found in the mafia Stackhouse.", 1, false),
+                onSuccess = {},
+                onFailure = {}
+            )
+        }else{
+            Log.d("CollectablesActivity", "There is no playerId")
+        }
     }
 }

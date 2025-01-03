@@ -6,6 +6,7 @@ import com.github.kittinunf.fuel.json.responseJson
 import org.json.JSONObject
 import pt.iade.games.detectiveribbitlayout.models.Collectible
 import pt.iade.games.detectiveribbitlayout.models.Evidence
+import pt.iade.games.detectiveribbitlayout.models.Player
 
 class APIRequest {
     val url = "http://10.0.2.2:3000"
@@ -42,20 +43,20 @@ class APIRequest {
                 //println("Request: $request")
                 //println("Response: $response")
                 val (json, error) = result
+                //list to send back
+                val evidences: MutableList<Evidence> = mutableListOf()
                 if (json != null) {
                     Log.d("GetEvidences", "All Evidences Succeeded");
 
                     //loop stuff
-                    val responseArr = json.array();
+                    val responseArr = json.array()
 
-                    var evidence: Evidence;
+                    var evidence: Evidence
 
-                    //list to send back
-                    var evidences: MutableList<Evidence> = mutableListOf()
+
 
                     for (i in 0 until responseArr.length()){
                         val currJsonObject = JSONObject(responseArr[i].toString())
-
 
                         evidence = Evidence(
                             id = currJsonObject.getInt("evidence_id"),
@@ -66,9 +67,46 @@ class APIRequest {
                         evidences.add(i, evidence);
                     }
 
+
+                }else{
+                    Log.e("GetEvidences", "Error: ${error?.response} $playerId")
+                }
+                onSuccess(
+                    //on success stuff sent back
+                    evidences
+                )
+            }
+    }
+
+    fun GetPlayerId(
+        code: Int,
+        onSuccess: (player: Player) -> Unit,
+        onFailure: () -> Unit,
+    ) {
+        Fuel.get("$url/player/get?code=$code")
+            .timeout(5000)
+            .responseJson { request, response, result ->
+                //println("Request: $request")
+                //println("Response: $response")
+                val (json, error) = result
+                if (json != null) {
+                    Log.d("GetPlayerId", "Request Succeeded");
+
+                    val responseArr = json.array();
+
+                    var player: Player = Player(id = 0, code = 0)
+
+                    for (i in 0 until responseArr.length()) {
+                        val currJsonObject = JSONObject(responseArr[i].toString())
+
+                        player = Player(
+                            id = currJsonObject.getInt("player_id"),
+                            code = code
+                        )
+                    }
                     onSuccess(
                         //on success stuff sent back
-                        evidences
+                        player
                     )
                 }else{
                     Log.e("GetEvidences", "Error: ${error?.message}")

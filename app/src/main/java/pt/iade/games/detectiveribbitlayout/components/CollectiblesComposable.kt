@@ -41,7 +41,7 @@ fun CollectiblesComposable() {
                 CollectiblePlaceHolder(
                     collectible = collectible,
                     onClick = {
-                        if (collectible.isunlocked) {
+                        if (collectible.isUnlocked) {
                             collect = collectible
                             showPopup = true
                         }

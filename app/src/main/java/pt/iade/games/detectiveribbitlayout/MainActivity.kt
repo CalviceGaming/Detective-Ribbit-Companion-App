@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
 import pt.iade.games.detectiveribbitlayout.controllers.Saves
 import pt.iade.games.detectiveribbitlayout.models.Collectible
+import pt.iade.games.detectiveribbitlayout.models.Player
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,14 +47,34 @@ class MainActivity : AppCompatActivity() {
 
         val apiRequests = APIRequest()
         val saves = Saves()
+        saves.savePlayerToFile(this, Player(id = 0, code = 0))
 
-        apiRequests.GetEvidences(
-            playerId = 1,
-            onSuccess = {collectiblesRecived ->
-                Log.v("MainActivity", collectiblesRecived.toString())
-                saves.saveEvidencesToFile(this, collectiblesRecived)
+
+        apiRequests.GetPlayerId(
+            code = 69,
+            onSuccess = {playerReceived ->
+                Log.v("MainActivity", playerReceived.toString())
+                saves.savePlayerToFile(this, playerReceived)
+
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //THIS IS NOT TO BE HERE, IT WILL BE ON THE CODE ACTIVITY
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                val savedPlayer = saves.loadPlayerFromFile(this)
+
+                apiRequests.GetEvidences(
+                    playerId = savedPlayer!!.id,
+                    onSuccess = {collectiblesReceived ->
+                        Log.v("MainActivity", collectiblesReceived.toString())
+                        saves.saveEvidencesToFile(this, collectiblesReceived)
+                    },
+                    onFailure = {}
+                )
+
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             },
             onFailure = {}
         )
+
     }
 }
