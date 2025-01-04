@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -36,10 +37,11 @@ fun CollectiblePlaceHolder(
         val context = LocalContext.current
         if (collectible.isUnlocked) {
             Card(
-                onClick = onClick
+                onClick = onClick,
+                shape = RectangleShape
             ) {
                 Box (
-                    contentAlignment = Alignment.Center // Center all content inside the Box
+                    contentAlignment = Alignment.Center, // Center all content inside the Box
                 ){
                     // Background image
                     Image(
@@ -74,7 +76,9 @@ fun CollectiblePlaceHolder(
                         "You haven't unlocked this collectible",
                         Toast.LENGTH_SHORT
                     ).show()
-                }
+                },
+                shape = RectangleShape
+
             ) {
                 Box (
                     contentAlignment = Alignment.Center // Center all content inside the Box

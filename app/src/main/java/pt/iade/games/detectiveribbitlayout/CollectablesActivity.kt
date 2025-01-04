@@ -13,7 +13,6 @@ import androidx.core.view.WindowInsetsCompat
 import pt.iade.games.detectiveribbitlayout.components.CollectiblesComposable
 import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
 import pt.iade.games.detectiveribbitlayout.controllers.Saves
-import pt.iade.games.detectiveribbitlayout.models.Collectible
 
 class CollectablesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,41 +47,5 @@ class CollectablesActivity : AppCompatActivity() {
         composeView.setContent {
             CollectiblesComposable(savedCollectibles)
         }
-
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //THIS IS NOT TO BE HERE, IT WILL BE AT THE END OF THE MINI GAME
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        val button: ImageButton = findViewById(R.id.addCollectable) // Replace with your button's ID
-
-        button.setOnClickListener {
-            // Fetch the saved player
-            val savedPlayer = saves.loadPlayerFromFile(this)
-
-            // Create the hard-coded collectible
-            val hardCodedCollectable = Collectible(1, "Statue", R.drawable.ribbitstatue, "Found in the mafia Stackhouse.", 1, false)
-
-            // Check if the player ID is valid
-            if (savedPlayer!!.id != 0) {
-                apiRequests.PostCollectibles(
-                    playerId = savedPlayer.id,
-                    collectible = hardCodedCollectable,
-                    onSuccess = {
-                        // Safely modify and save the list of collectibles
-                        val updatedCollectibles = saves.loadCollectablesFromFile(this)?.toMutableList() ?: mutableListOf()
-                        updatedCollectibles.add(hardCodedCollectable)
-                        saves.saveCollectablesToFile(this, updatedCollectibles)
-                    },
-                    onFailure = {
-                        Log.d("CollectablesActivity", "Failed to post collectible.")
-                    }
-                )
-            } else {
-                Log.d("CollectablesActivity", "There is no playerId")
-            }
-        }
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }
