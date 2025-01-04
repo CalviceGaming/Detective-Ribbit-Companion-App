@@ -1,8 +1,8 @@
 package pt.iade.games.detectiveribbitlayout.components
 
-import android.content.Intent
-import android.hardware.Sensor
-import android.hardware.SensorManager
+import android.util.Log
+import android.view.View
+import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,19 +24,27 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.startActivity
-import com.innoveworkshop.plinko.PlinkoGameActivity
+import pt.iade.games.detectiveribbitlayout.ProgressActivity
 import pt.iade.games.detectiveribbitlayout.R
+import pt.iade.games.detectiveribbitlayout.controllers.Saves
 
 @Composable
-fun RibbitProgressBar(Steps: Int) {
+fun RibbitProgressBar() {
     val context = LocalContext.current
-    val intent = Intent(context, PlinkoGameActivity::class.java)
+
+    val saves = Saves()
+    // Load evidence data
+    val evidences = saves.loadEvidencesFromFile(context)
+
+    // Calculate progress based on the number of evidences
+    val totalEvidences = 5 // or any other number based on your game logic
+    val progress = evidences?.size?.toFloat()?.div(totalEvidences) ?: 0f
     // State to manage progress
-    val currentProgress = remember { mutableStateOf(Steps.toInt()/100f) }
+    val currentProgress = remember { mutableStateOf(progress.coerceIn(0f, 1f)) }
+
+
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val PurpleGrey40 = colorResource(id = R.color.purple)
-
 
     // Image size and vertical offset (modifiable)
     val ribbitImageSize = 40.dp
@@ -44,6 +52,33 @@ fun RibbitProgressBar(Steps: Int) {
 
     // Dynamically calculate the image's horizontal position
     val ribbitImageProgress = (screenWidth - 40.dp) * currentProgress.value - (ribbitImageSize / 2)
+
+    val plinkoButtonContainer: FrameLayout = (context as ProgressActivity).findViewById(R.id.PlinkoButtonContainer)
+    val bowlingButtonContainer: FrameLayout = (context as ProgressActivity).findViewById(R.id.BowlingButtonContainer)
+
+    // Initially hide the buttons
+    plinkoButtonContainer.visibility = View.INVISIBLE
+    bowlingButtonContainer.visibility = View.INVISIBLE
+
+    // Load collectables from file
+    val collectables = saves.loadCollectablesFromFile(context)
+
+    val collectibleId1 = collectables?.find { it.id == 1 }
+    val collectibleId2 = collectables?.find { it.id == 2 }
+
+
+    // Check if the collectible with id 1 is over 50% progress
+    val isCollectible1Over50 = collectibleId1?.isUnlocked == false && currentProgress.value >= 0.5f
+    val isCollectible2Over1 = collectibleId2?.isUnlocked == false && currentProgress.value >= 1.0f
+
+    // Make buttons visible when the progress reaches certain values
+    if (currentProgress.value >= 0.5f && !isCollectible1Over50) {
+        plinkoButtonContainer.visibility = View.VISIBLE
+    }
+    if (currentProgress.value >= 1.0f && !isCollectible2Over1) {
+        bowlingButtonContainer.visibility = View.VISIBLE
+    }
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -83,9 +118,6 @@ fun RibbitProgressBar(Steps: Int) {
                 // Increment progress by 0.1 (clamped between 0 and 1)
                 if (currentProgress.value < 1.0f) {
                     currentProgress.value += 0.1f
-                }
-                if(currentProgress.value >= 1){
-                    context.startActivity(intent)
                 }
             }
         ) {

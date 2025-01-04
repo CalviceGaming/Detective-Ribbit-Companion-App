@@ -1,6 +1,7 @@
 package com.innoveworkshop.gametest
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -16,7 +17,11 @@ import com.innoveworkshop.gametest.assets.Pin
 import com.innoveworkshop.gametest.engine.GameObject
 import com.innoveworkshop.gametest.engine.GameSurface
 import com.innoveworkshop.gametest.engine.Vector
+import pt.iade.games.detectiveribbitlayout.MainActivity
 import pt.iade.games.detectiveribbitlayout.R
+import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
+import pt.iade.games.detectiveribbitlayout.controllers.Saves
+import pt.iade.games.detectiveribbitlayout.models.Collectible
 import kotlin.math.absoluteValue
 import kotlin.math.sqrt
 
@@ -34,10 +39,10 @@ class BowlingGameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bowling)
         gameSurface = findViewById<View>(R.id.bowlingSurface) as GameSurface
+
         game = Game()
         gameSurface!!.setRootGameObject(game)
 
-        scoreTxt = findViewById<View>(R.id.score) as TextView
 
         controlsLayout = findViewById<View>(R.id.controls_layout) as ConstraintLayout
         controlsLayout!!.setOnTouchListener { _, event ->
@@ -72,6 +77,7 @@ class BowlingGameActivity : AppCompatActivity() {
         private var initialPositionX : Float = 0f
         private var initialPositionY : Float = 0f
         private var numberOfTries: Int = 0
+        private var hasGivenCollectible = false
         override fun onStart(surface: GameSurface?) {
             super.onStart(surface)
             initialPositionX = (surface!!.width.toFloat())/2f
@@ -84,7 +90,8 @@ class BowlingGameActivity : AppCompatActivity() {
                 initialPositionY, // Bottom of the screen, considering the radius
                 100f, // Radius of the ball
                 Color.rgb(128, 14, 80),
-                10f
+                10f,
+                this@BowlingGameActivity
             )
             // Add the circle to the surface
             surface.addGameObject(bowlingBall!!)
@@ -99,18 +106,38 @@ class BowlingGameActivity : AppCompatActivity() {
             if (bowlingBall!!.hitRightWall() || bowlingBall!!.hitLeftWall() || bowlingBall!!.hitTopWall() ||bowlingBall!!.hitBottomWall()){
                 ResetBowlingBall()
             }
+            // Check if score has reached 10 and give the collectible if not already done
+            if (bowlingBall!!.score >= 10 && !hasGivenCollectible) {
+                hasGivenCollectible = true // Ensure it's only given once
+                val apiRequests = APIRequest()
+                val saves = Saves()
+                // Fetch the saved player
+                val savedPlayer = saves.loadPlayerFromFile(this@BowlingGameActivity)
 
-            Log.i("", "${bowlingBall!!.velocity.x.absoluteValue} ${bowlingBall!!.velocity.y.absoluteValue}")
+                // Create the hard-coded collectible
+                val hardCodedCollectable = Collectible(2, "Something", R.drawable.bowling_ball, "Something Something that Something", 1, false)
 
-            if (bowlingBall!!.velocity.x.absoluteValue <= 0.1f && bowlingBall!!.velocity.y.absoluteValue <= 0.1f && hasLaunch){
-                ResetBowlingBall()
-            }
-
-
-            val mainHandler = Handler(Looper.getMainLooper())
-            mainHandler.post {
-                // This will update the UI safely on the main thread
-                scoreTxt?.text = "Score: ${bowlingBall!!.score}"
+                // Check if the player ID is valid
+                if (savedPlayer!!.id != 0) {
+                    apiRequests.PostCollectibles(
+                        playerId = savedPlayer.id,
+                        collectible = hardCodedCollectable,
+                        onSuccess = {
+                            // Safely modify and save the list of collectibles
+                            val updatedCollectibles = saves.loadCollectablesFromFile(this@BowlingGameActivity)?.toMutableList() ?: mutableListOf()
+                            updatedCollectibles.add(hardCodedCollectable)
+                            saves.saveCollectablesToFile(this@BowlingGameActivity, updatedCollectibles)
+                            // Start the MainActivity after successfully posting the collectible
+                            val intent = Intent(this@BowlingGameActivity, MainActivity::class.java)
+                            startActivity(intent)
+                        },
+                        onFailure = {
+                            Log.d("CollectablesActivity", "Failed to post collectible.")
+                        }
+                    )
+                } else {
+                    Log.d("CollectablesActivity", "There is no playerId")
+                }
             }
             val iterator = pins!!.iterator()
             while (iterator.hasNext()) {
@@ -129,8 +156,15 @@ class BowlingGameActivity : AppCompatActivity() {
             numberOfTries++
             hasLaunch = false
 
-            if (numberOfTries >= 3)
+            if (numberOfTries >= 3) {
+                // Destroy the bowling ball and restart the game
                 bowlingBall!!.destroy()
+
+                // Restart the activity (this will restart the game)
+                val intent = Intent(this@BowlingGameActivity, BowlingGameActivity::class.java)
+                startActivity(intent)
+                finish() // Optionally finish the current activity to prevent going back
+            }
         }
     }
 
@@ -157,7 +191,7 @@ class BowlingGameActivity : AppCompatActivity() {
                     ballX,
                     ballY,
                     30f, // Radius of the pin
-                    Color.GREEN // Pin color
+                    Color.WHITE // Pin color
                 )
 
                 // Add the Pin to the list and to the GameSurface

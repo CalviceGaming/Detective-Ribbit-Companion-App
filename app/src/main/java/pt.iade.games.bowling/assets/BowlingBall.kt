@@ -1,8 +1,13 @@
 package com.innoveworkshop.gametest.assets
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import com.innoveworkshop.gametest.engine.Circle
 import com.innoveworkshop.gametest.engine.Vector
+import pt.iade.games.detectiveribbitlayout.R
 import java.lang.Math.*
 import kotlin.math.absoluteValue
 import kotlin.math.sqrt
@@ -12,11 +17,18 @@ class BowlingBall(
     y: Float,
     radius: Float,
     color: Int,
-    var mass: Float
+    var mass: Float,
+    private val context: Context
 ) : Circle(x, y, radius, color) {
     var velocity: Vector = Vector(0f, 0f) // Ball's current velocity
     var score: Int = 0;
     private val friction: Float = 0.98f // Friction coefficient
+    private var image: Bitmap? = null
+
+    init {
+        // Load the bowling ball image
+        image = BitmapFactory.decodeResource(context.resources, R.drawable.bowling_ball) // Replace with your actual image resource
+    }
 
     override fun onFixedUpdate() {
         super.onFixedUpdate()
@@ -32,6 +44,13 @@ class BowlingBall(
         // Stop the ball if velocity is very small
         if (velocity.x.absoluteValue < 0.1f) velocity.x = 0f
         if (velocity.y.absoluteValue < 0.1f) velocity.y = 0f
+    }
+
+    fun draw(canvas: Canvas) {
+        image?.let {
+            // Draw the image at the position of the BowlingBall
+            canvas.drawBitmap(it, position.x - radius, position.y - radius, null)
+        }
     }
 
     fun applyForce(force: Vector) {

@@ -37,7 +37,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logoMainPage"
-        tools:ignore="RtlSymmetry" />
+        tools:ignore="RtlSymmetry"
+        android:fontFamily="@font/typewriter_font"/>
 
     <!-- FrameLayout for Send button with text on top -->
     <FrameLayout
@@ -59,7 +60,7 @@
             android:background="@null"
             android:contentDescription="@null"
             android:scaleType="fitCenter"
-            android:src="@drawable/send_button_background" />
+            android:src="@drawable/send_button_background"/>
 
         <!-- Text on top of the ImageButton -->
         <TextView
@@ -69,7 +70,8 @@
             android:text="Send"
             android:textSize="20sp"
             android:textColor="@android:color/black"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:fontFamily="@font/typewriter_font"/>
 
     </FrameLayout>
 

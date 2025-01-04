@@ -35,11 +35,6 @@ class MainActivity : AppCompatActivity() {
 
         // Buttons
         val progressButton: ImageButton = findViewById(R.id.progressButton)
-        progressButton.setOnClickListener {
-            val intent = Intent(this, ProgressActivity::class.java)
-            startActivity(intent)
-        }
-
         val evidenceButton: ImageButton = findViewById(R.id.evidenceButton)
         val collectablesButton: ImageButton = findViewById(R.id.collectablesButton)
         val sendButtonContainer: FrameLayout = findViewById(R.id.sendButtonContainer)
@@ -62,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                     Log.v("MainActivity", playerReceived.toString())
                     saves.savePlayerToFile(this, playerReceived)
                     // Check again after saving player
+                    progressButton.visibility = View.VISIBLE
                     evidenceButton.visibility = View.VISIBLE
                     collectablesButton.visibility = View.VISIBLE
                     // Hide the EditText and Send button after player is saved
@@ -85,10 +81,11 @@ class MainActivity : AppCompatActivity() {
 
         if (savedPlayer != null) {
             // If player exists, show the evidence and collectables buttons, hide the EditText and Send button
+            progressButton.visibility = View.VISIBLE
             evidenceButton.visibility = View.VISIBLE
             collectablesButton.visibility = View.VISIBLE
             textInput.visibility = View.GONE
-            sendButton.visibility = View.GONE
+            sendButtonContainer.visibility = View.GONE
 
             apiRequests.GetEvidences(
                 playerId = savedPlayer.id,
@@ -100,8 +97,14 @@ class MainActivity : AppCompatActivity() {
             )
         } else {
             // If player doesn't exist, hide the evidence and collectables buttons
+            progressButton.visibility = View.GONE
             evidenceButton.visibility = View.GONE
             collectablesButton.visibility = View.GONE
+        }
+
+        progressButton.setOnClickListener {
+            val intent = Intent(this, ProgressActivity::class.java)
+            startActivity(intent)
         }
 
         // Set up buttons' click listeners

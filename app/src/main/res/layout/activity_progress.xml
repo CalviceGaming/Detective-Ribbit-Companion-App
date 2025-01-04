@@ -26,6 +26,74 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+    <!-- FrameLayout for Send button with text on top -->
+    <FrameLayout
+        android:id="@+id/PlinkoButtonContainer"
+        android:layout_width="257dp"
+        android:layout_height="106dp"
+        android:layout_marginTop="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/compose_view">
+
+        <!-- ImageButton with smaller size -->
+        <ImageButton
+            android:id="@+id/openPlinkoButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/send_button_background" />
+
+        <!-- Text on top of the ImageButton -->
+        <TextView
+            android:id="@+id/plinkoButtonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/typewriter_font"
+            android:text="Play Plinko"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/BowlingButtonContainer"
+        android:layout_width="257dp"
+        android:layout_height="106dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/PlinkoButtonContainer"
+        android:layout_marginTop="7dp">
+
+        <!-- ImageButton with smaller size -->
+        <ImageButton
+            android:id="@+id/openBowlingButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/send_button_background" />
+
+        <!-- Text on top of the ImageButton -->
+        <TextView
+            android:id="@+id/bowlingButtonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play Bowling"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"
+            android:fontFamily="@font/typewriter_font"/>
+
+    </FrameLayout>
 
     <ImageButton
         android:id="@+id/backButton"
@@ -42,4 +110,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
