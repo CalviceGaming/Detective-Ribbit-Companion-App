@@ -23,6 +23,7 @@ import pt.iade.games.detectiveribbitlayout.controllers.Saves
 import pt.iade.games.detectiveribbitlayout.models.Collectible
 import kotlin.math.sqrt
 import kotlin.random.Random
+import kotlinx.coroutines.*
 
 class PlinkoGameActivity : AppCompatActivity() {
     protected var gameSurface: GameSurface? = null
@@ -166,22 +167,24 @@ class PlinkoGameActivity : AppCompatActivity() {
 
                 // Check if the player ID is valid
                 if (savedPlayer!!.id != 0) {
-                    apiRequests.PostCollectibles(
-                        playerId = savedPlayer.id,
-                        collectible = hardCodedCollectable,
-                        onSuccess = {
-                            // Safely modify and save the list of collectibles
+                    CoroutineScope(Dispatchers.Main).launch {
+                        try {
+                            // Perform the network call on a background thread
+                            apiRequests.postCollectibles(playerId = savedPlayer.id, collectible = hardCodedCollectable)
+
+                            // Safely modify and save the list of collectibles after the network call succeeds
                             val updatedCollectibles = saves.loadCollectablesFromFile(this@PlinkoGameActivity)?.toMutableList() ?: mutableListOf()
                             updatedCollectibles.add(hardCodedCollectable)
                             saves.saveCollectablesToFile(this@PlinkoGameActivity, updatedCollectibles)
+
                             // Start the MainActivity after successfully posting the collectible
                             val intent = Intent(this@PlinkoGameActivity, MainActivity::class.java)
                             startActivity(intent)
-                        },
-                        onFailure = {
-                            Log.d("CollectablesActivity", "Failed to post collectible.")
+                        } catch (e: Exception) {
+                            // Handle failure (log or show user feedback)
+                            Log.e("CollectablesActivity", "Failed to post collectible: ${e.message}")
                         }
-                    )
+                    }
                 } else {
                     Log.d("CollectablesActivity", "There is no playerId")
                 }

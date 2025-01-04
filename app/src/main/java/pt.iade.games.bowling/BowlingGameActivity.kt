@@ -17,6 +17,9 @@ import com.innoveworkshop.gametest.assets.Pin
 import com.innoveworkshop.gametest.engine.GameObject
 import com.innoveworkshop.gametest.engine.GameSurface
 import com.innoveworkshop.gametest.engine.Vector
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import pt.iade.games.detectiveribbitlayout.MainActivity
 import pt.iade.games.detectiveribbitlayout.R
 import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
@@ -119,22 +122,24 @@ class BowlingGameActivity : AppCompatActivity() {
 
                 // Check if the player ID is valid
                 if (savedPlayer!!.id != 0) {
-                    apiRequests.PostCollectibles(
-                        playerId = savedPlayer.id,
-                        collectible = hardCodedCollectable,
-                        onSuccess = {
-                            // Safely modify and save the list of collectibles
+                    CoroutineScope(Dispatchers.Main).launch {
+                        try {
+                            // Perform the network call on a background thread
+                            apiRequests.postCollectibles(playerId = savedPlayer.id, collectible = hardCodedCollectable)
+
+                            // Safely modify and save the list of collectibles after the network call succeeds
                             val updatedCollectibles = saves.loadCollectablesFromFile(this@BowlingGameActivity)?.toMutableList() ?: mutableListOf()
                             updatedCollectibles.add(hardCodedCollectable)
                             saves.saveCollectablesToFile(this@BowlingGameActivity, updatedCollectibles)
+
                             // Start the MainActivity after successfully posting the collectible
                             val intent = Intent(this@BowlingGameActivity, MainActivity::class.java)
                             startActivity(intent)
-                        },
-                        onFailure = {
-                            Log.d("CollectablesActivity", "Failed to post collectible.")
+                        } catch (e: Exception) {
+                            // Handle failure (log or show user feedback)
+                            Log.e("CollectablesActivity", "Failed to post collectible: ${e.message}")
                         }
-                    )
+                    }
                 } else {
                     Log.d("CollectablesActivity", "There is no playerId")
                 }

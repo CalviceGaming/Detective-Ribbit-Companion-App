@@ -11,12 +11,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.FragmentContainer
-import com.innoveworkshop.gametest.BowlingGameActivity
-import com.innoveworkshop.plinko.PlinkoGameActivity
 import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
 import pt.iade.games.detectiveribbitlayout.controllers.Saves
-import pt.iade.games.detectiveribbitlayout.models.Player
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,30 +47,22 @@ class MainActivity : AppCompatActivity() {
             val userInput = textInput.text.toString()
             Log.d("MainActivity", "User input: $userInput")
 
-
-            apiRequests.GetPlayerId(
-                code = userInput.toInt(),
-                onSuccess = { playerReceived ->
-                    Log.v("MainActivity", playerReceived.toString())
-                    saves.savePlayerToFile(this, playerReceived)
-                    // Check again after saving player
+            CoroutineScope(Dispatchers.Main).launch {
+                val player = apiRequests.getPlayerId(userInput.toInt())
+                if (player != null) {
+                    saves.savePlayerToFile(this@MainActivity, player)
                     progressButton.visibility = View.VISIBLE
                     evidenceButton.visibility = View.VISIBLE
                     collectablesButton.visibility = View.VISIBLE
-                    // Hide the EditText and Send button after player is saved
                     textInput.visibility = View.GONE
                     sendButtonContainer.visibility = View.GONE
-                    apiRequests.GetEvidences(
-                        playerId = playerReceived.id,
-                        onSuccess = {collectiblesReceived ->
-                            Log.v("MainActivity", collectiblesReceived.toString())
-                            saves.saveEvidencesToFile(this, collectiblesReceived)
-                        },
-                        onFailure = {}
-                    )
-                },
-                onFailure = {}
-            )
+
+                    val evidences = apiRequests.getEvidences(player.id)
+                    saves.saveEvidencesToFile(this@MainActivity, evidences)
+                } else {
+                    Log.e("MainActivity", "Failed to fetch player")
+                }
+            }
         }
 
         // Check if player exists
@@ -87,14 +76,21 @@ class MainActivity : AppCompatActivity() {
             textInput.visibility = View.GONE
             sendButtonContainer.visibility = View.GONE
 
-            apiRequests.GetEvidences(
-                playerId = savedPlayer.id,
-                onSuccess = {collectiblesReceived ->
-                    Log.v("MainActivity", collectiblesReceived.toString())
-                    saves.saveEvidencesToFile(this, collectiblesReceived)
-                },
-                onFailure = {}
-            )
+
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    // Perform the network call on a background thread
+                    val evidencesReceived = apiRequests.getEvidences(playerId = savedPlayer.id)
+
+                    // Handle success on the main thread
+                    Log.v("MainActivity", evidencesReceived.toString())
+                    saves.saveEvidencesToFile(this@MainActivity, evidencesReceived)
+                } catch (e: Exception) {
+                    // Handle failure here (e.g., log error or show user feedback)
+                    Log.e("MainActivity", "Failed to fetch evidences: ${e.message}")
+                }
+            }
+
         } else {
             // If player doesn't exist, hide the evidence and collectables buttons
             progressButton.visibility = View.GONE

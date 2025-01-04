@@ -7,110 +7,75 @@ import org.json.JSONObject
 import pt.iade.games.detectiveribbitlayout.models.Collectible
 import pt.iade.games.detectiveribbitlayout.models.Evidence
 import pt.iade.games.detectiveribbitlayout.models.Player
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class APIRequest {
-    val url = "http://10.0.2.2:3000"
+    private val url = "https://detective-ribbit-server.onrender.com"
 
-    fun PostCollectibles(
+    suspend fun postCollectibles(
         playerId: Int,
-        collectible: Collectible,
-        onSuccess: () -> Unit,
-        onFailure: () -> Unit,
-    ) {
-        Fuel.post("$url/collectibles/add?playerId=$playerId&collectibleId=${collectible.id}")
+        collectible: Collectible
+    ): Boolean = withContext(Dispatchers.IO) {
+        val (_, _, result) = Fuel.post("$url/collectibles/add?playerId=$playerId&collectibleId=${collectible.id}")
             .timeout(5000)
-            .responseJson { request, response, result ->
-                //println("Request: $request")
-                //println("Response: $response")
-                val (json, error) = result
-                if (json != null) {
-                    Log.d("PostCollectibles", "Collectible Send successfully")
-                    onSuccess()
-                }else{
-                    Log.e("PostCollectibles", "Error: ${error?.response}")
-                }
-            }
+            .responseJson()
+
+        result.fold(
+            success = { true },
+            failure = { false }
+        )
     }
 
-    fun GetEvidences(
-        playerId: Int,
-        onSuccess: (evidences: MutableList<Evidence>) -> Unit,
-        onFailure: () -> Unit,
-    ) {
-        Fuel.get("$url/evidences/get?playerId=$playerId")
+    suspend fun getEvidences(
+        playerId: Int
+    ): MutableList<Evidence> = withContext(Dispatchers.IO) {
+        val (_, _, result) = Fuel.get("$url/evidences/get?playerId=$playerId")
             .timeout(5000)
-            .responseJson { request, response, result ->
-                //println("Request: $request")
-                //println("Response: $response")
-                val (json, error) = result
-                //list to send back
-                val evidences: MutableList<Evidence> = mutableListOf()
-                if (json != null) {
-                    Log.d("GetEvidences", "All Evidences Succeeded");
+            .responseJson()
 
-                    //loop stuff
-                    val responseArr = json.array()
-
-                    var evidence: Evidence
-
-
-
-                    for (i in 0 until responseArr.length()){
-                        val currJsonObject = JSONObject(responseArr[i].toString())
-
-                        evidence = Evidence(
-                            id = currJsonObject.getInt("evidence_id"),
-                            name = currJsonObject.getString("evidence_name"),
-                            description = currJsonObject.getString("evidence_description")
+        result.fold(
+            success = { data ->
+                val evidences = mutableListOf<Evidence>()
+                val responseArr = data.array()
+                for (i in 0 until responseArr.length()) {
+                    val obj = JSONObject(responseArr[i].toString())
+                    evidences.add(
+                        Evidence(
+                            id = obj.getInt("evidence_id"),
+                            name = obj.getString("evidence_name"),
+                            description = obj.getString("evidence_description")
                         )
-
-                        evidences.add(i, evidence);
-                    }
-
-
-                }else{
-                    Log.e("GetEvidences", "Error: ${error?.response} $playerId")
-                }
-                onSuccess(
-                    //on success stuff sent back
-                    evidences
-                )
-            }
-    }
-
-    fun GetPlayerId(
-        code: Int,
-        onSuccess: (player: Player) -> Unit,
-        onFailure: () -> Unit,
-    ) {
-        Fuel.get("$url/player/get?code=$code")
-            .timeout(5000)
-            .responseJson { request, response, result ->
-                //println("Request: $request")
-                //println("Response: $response")
-                val (json, error) = result
-                if (json != null) {
-                    Log.d("GetPlayerId", "Request Succeeded");
-
-                    val responseArr = json.array();
-
-                    var player: Player = Player(id = 0, code = 0)
-
-                    for (i in 0 until responseArr.length()) {
-                        val currJsonObject = JSONObject(responseArr[i].toString())
-
-                        player = Player(
-                            id = currJsonObject.getInt("player_id"),
-                            code = code
-                        )
-                    }
-                    onSuccess(
-                        //on success stuff sent back
-                        player
                     )
-                }else{
-                    Log.e("GetEvidences", "Error: ${error?.message}")
                 }
+                evidences
+            },
+            failure = {
+                Log.e("GetEvidences", "Error: ${it.response}")
+                mutableListOf()
             }
+        )
+    }
+
+    suspend fun getPlayerId(
+        code: Int
+    ): Player? = withContext(Dispatchers.IO) {
+        val (_, _, result) = Fuel.get("$url/player/get?code=$code")
+            .timeout(5000)
+            .responseJson()
+
+        result.fold(
+            success = { data ->
+                val responseArr = data.array()
+                if (responseArr.length() > 0) {
+                    val obj = JSONObject(responseArr[0].toString())
+                    Player(id = obj.getInt("player_id"), code = code)
+                } else null
+            },
+            failure = {
+                Log.e("GetPlayerId", "Error: ${it.message}")
+                null
+            }
+        )
     }
 }
