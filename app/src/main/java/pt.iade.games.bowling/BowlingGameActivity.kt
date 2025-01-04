@@ -163,7 +163,7 @@ class BowlingGameActivity : AppCompatActivity() {
                 // Restart the activity (this will restart the game)
                 val intent = Intent(this@BowlingGameActivity, BowlingGameActivity::class.java)
                 startActivity(intent)
-                finish() // Optionally finish the current activity to prevent going back
+                finish()
             }
         }
     }

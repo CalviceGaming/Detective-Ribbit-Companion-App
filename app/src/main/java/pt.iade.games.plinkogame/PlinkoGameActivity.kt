@@ -1,5 +1,6 @@
 package com.innoveworkshop.plinko
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -8,13 +9,18 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.innoveworkshop.gametest.BowlingGameActivity
 import com.innoveworkshop.plinko.assets.Multiplier
 import com.innoveworkshop.plinko.assets.PlinkoBall
 import com.innoveworkshop.plinko.engine.Circle
 import com.innoveworkshop.plinko.engine.GameObject
 import com.innoveworkshop.plinko.engine.GameSurface
 import com.innoveworkshop.plinko.engine.Vector
+import pt.iade.games.detectiveribbitlayout.MainActivity
 import pt.iade.games.detectiveribbitlayout.R
+import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
+import pt.iade.games.detectiveribbitlayout.controllers.Saves
+import pt.iade.games.detectiveribbitlayout.models.Collectible
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -55,6 +61,11 @@ class PlinkoGameActivity : AppCompatActivity() {
                 gameSurface!!.addGameObject(ListOfBallsinJaw[iBall]!!)
                 iBall++
                 peso -= 5f
+                if (peso < 0f){
+                    val intent = Intent(this@PlinkoGameActivity, PlinkoGameActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
             }
         }
         return true
@@ -139,6 +150,41 @@ class PlinkoGameActivity : AppCompatActivity() {
                     }
                 }
                 i++
+            }
+
+
+
+            // Log a message when peso exceeds $60
+            if (peso >= 60f) {
+                val apiRequests = APIRequest()
+                val saves = Saves()
+                // Fetch the saved player
+                val savedPlayer = saves.loadPlayerFromFile(this@PlinkoGameActivity)
+
+                // Create the hard-coded collectible
+                val hardCodedCollectable = Collectible(1, "Statue", R.drawable.ribbitstatue, "Found in the mafia Stackhouse.", 1, false)
+
+                // Check if the player ID is valid
+                if (savedPlayer!!.id != 0) {
+                    apiRequests.PostCollectibles(
+                        playerId = savedPlayer.id,
+                        collectible = hardCodedCollectable,
+                        onSuccess = {
+                            // Safely modify and save the list of collectibles
+                            val updatedCollectibles = saves.loadCollectablesFromFile(this@PlinkoGameActivity)?.toMutableList() ?: mutableListOf()
+                            updatedCollectibles.add(hardCodedCollectable)
+                            saves.saveCollectablesToFile(this@PlinkoGameActivity, updatedCollectibles)
+                            // Start the MainActivity after successfully posting the collectible
+                            val intent = Intent(this@PlinkoGameActivity, MainActivity::class.java)
+                            startActivity(intent)
+                        },
+                        onFailure = {
+                            Log.d("CollectablesActivity", "Failed to post collectible.")
+                        }
+                    )
+                } else {
+                    Log.d("CollectablesActivity", "There is no playerId")
+                }
             }
         }
     }
