@@ -1,7 +1,7 @@
-package com.innoveworkshop.gametest.assets
+package com.innoveworkshop.plinko.assets
 
-import com.innoveworkshop.gametest.engine.Rectangle
-import com.innoveworkshop.gametest.engine.Vector
+import com.innoveworkshop.plinko.engine.Rectangle
+import com.innoveworkshop.plinko.engine.Vector
 
 class DroppingRectangle(
     position: Vector?,

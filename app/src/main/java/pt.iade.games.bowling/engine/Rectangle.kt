@@ -1,9 +1,9 @@
-package com.innoveworkshop.plinko.engine
+package com.innoveworkshop.gametest.engine
 
 import android.graphics.Canvas
 import android.graphics.Paint
 
-open class Rectangle(position: Vector?, var width: Float, var height: Float, var color: Int) :
+open class Rectangle(position: Vector?, var width: Float, var height: Float, color: Int) :
     GameObject(
         position!!
     ), Caged {
@@ -33,6 +33,14 @@ open class Rectangle(position: Vector?, var width: Float, var height: Float, var
 
     override fun hitRightWall(): Boolean {
         return (position.x + width / 2) >= gameSurface!!.width
+    }
+
+    override fun hitBottomWall(): Boolean {
+        return (position.y  + width / 2) >= gameSurface!!.height
+    }
+
+    override fun hitTopWall(): Boolean {
+        return (position.y  + width / 2) >= gameSurface!!.height
     }
 
     override val isFloored: Boolean

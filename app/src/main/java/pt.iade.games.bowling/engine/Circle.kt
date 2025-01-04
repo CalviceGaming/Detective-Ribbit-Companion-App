@@ -1,9 +1,9 @@
-package com.innoveworkshop.plinko.engine
+package com.innoveworkshop.gametest.engine
 
 import android.graphics.Canvas
 import android.graphics.Paint
 
-open class Circle(x: Float, y: Float, var radius: Float, color: Int, var speed: Vector) : GameObject(x, y), Caged {
+open class Circle(x: Float, y: Float, var radius: Float, color: Int) : GameObject(x, y), Caged {
     // Set up the paint.
     var paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -18,11 +18,19 @@ open class Circle(x: Float, y: Float, var radius: Float, color: Int, var speed: 
     }
 
     override fun hitLeftWall(): Boolean {
-        return (position.x - radius) <= gameSurface!!.width
+        return (position.x - radius) <= 0
     }
 
     override fun hitRightWall(): Boolean {
         return (position.x + radius) >= gameSurface!!.width
+    }
+
+    override fun hitBottomWall(): Boolean {
+        return (position.y + radius) >= gameSurface!!.height
+    }
+
+    override fun hitTopWall(): Boolean {
+        return (position.y + radius) <= 0
     }
 
     override val isFloored: Boolean

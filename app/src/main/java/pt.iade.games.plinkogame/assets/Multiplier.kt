@@ -1,11 +1,11 @@
-package com.innoveworkshop.gametest.assets
+package com.innoveworkshop.plinko.assets
 
 import android.graphics.Color
 import android.icu.text.ListFormatter.Width
 import android.icu.text.Transliterator.Position
-import com.innoveworkshop.gametest.engine.GameSurface
-import com.innoveworkshop.gametest.engine.Rectangle
-import com.innoveworkshop.gametest.engine.Vector
+import com.innoveworkshop.plinko.engine.GameSurface
+import com.innoveworkshop.plinko.engine.Rectangle
+import com.innoveworkshop.plinko.engine.Vector
 
 class Multiplier(
     position: Vector,

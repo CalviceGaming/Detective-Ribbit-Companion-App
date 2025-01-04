@@ -1,10 +1,9 @@
-package com.innoveworkshop.plinko.engine
+package com.innoveworkshop.gametest.engine
 
 import android.graphics.Canvas
 
 abstract class GameObject {
     var position: Vector
-    var id: Int? = null
 
     protected var gameSurface: GameSurface? = null
     var isDestroyed: Boolean = false

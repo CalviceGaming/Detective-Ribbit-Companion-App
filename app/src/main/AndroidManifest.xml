@@ -23,7 +23,10 @@
             android:name=".ProgressActivity"
             android:exported="false" />
         <activity
-            android:name="com.innoveworkshop.gametest.PlinkoGameActivity"
+            android:name="com.innoveworkshop.plinko.PlinkoGameActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.innoveworkshop.gametest.BowlingGameActivity"
             android:exported="false" />
         <activity
             android:name=".CollectablesActivity"

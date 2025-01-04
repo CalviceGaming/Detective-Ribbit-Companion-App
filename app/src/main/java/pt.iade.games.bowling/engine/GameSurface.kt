@@ -1,4 +1,4 @@
-package com.innoveworkshop.plinko.engine
+package com.innoveworkshop.gametest.engine
 
 import android.content.Context
 import android.graphics.Canvas
@@ -18,7 +18,7 @@ class GameSurface @JvmOverloads constructor(
     private var root: GameObject? = null
 
     // Create the GameObject list.
-    public val gameObjects = ArrayList<GameObject?>()
+    private val gameObjects = ArrayList<GameObject>()
 
     init {
         // Ensure we are on top of everything.
@@ -36,7 +36,7 @@ class GameSurface @JvmOverloads constructor(
 
                 // Set up the fixed update timer.
                 timer = Timer()
-                timer!!.scheduleAtFixedRate(FixedUpdateTimer(), 0, (1000 / 60).toLong())
+                timer!!.scheduleAtFixedRate(FixedUpdateTimer(), 0, (1000 / 30).toLong())
             }
 
             override fun surfaceChanged(
@@ -58,51 +58,27 @@ class GameSurface @JvmOverloads constructor(
     }
 
     fun addGameObject(gameObject: GameObject) {
-        if(gameObjects.isEmpty()){
-            gameObjects.add(gameObject)
-            gameObject.id = gameObjects.size - 1
-        }else{
-            var i = 0
-            val size = gameObjects.size
-            while (i < size){
-                if(gameObjects[i] == null){
-                    gameObjects[i] = gameObject
-                    gameObject.id = i
-                    break
-                }else if (i == gameObjects.size - 1){
-                    gameObjects.add(gameObject)
-                    gameObject.id = gameObjects.size - 1
-                }
-                i++
-            }
-        }
+        gameObjects.add(gameObject)
         gameObject.onStart(this)
     }
 
-    fun removeGameObject(gameObject: GameObject) {
-        var i = 0
-        while (i < gameObjects.size - gameObject.id!! - 1){
-            gameObjects[gameObject.id!! + i] = gameObjects[gameObject.id!! + i + 1]
-            gameObjects[gameObject.id!! + i]?.id = gameObjects[gameObject.id!! + i]?.id!! - 1
-            i++
-        }
-        gameObjects[gameObjects.size - 1] = null
+    fun removeGameObject(gameObject: GameObject): Boolean {
+        return gameObjects.remove(gameObject)
     }
-
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        root?.onDraw(canvas)
+        root!!.onDraw(canvas)
         for (gameObject in gameObjects) {
-            gameObject?.onDraw(canvas)
+            gameObject.onDraw(canvas)
         }
     }
 
     internal inner class FixedUpdateTimer : TimerTask() {
         override fun run() {
             for (gameObject in gameObjects) {
-                gameObject?.onFixedUpdate()
+                gameObject.onFixedUpdate()
             }
 
             root!!.onFixedUpdate()

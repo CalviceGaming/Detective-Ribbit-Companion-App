@@ -1,5 +1,6 @@
 package pt.iade.games.detectiveribbitlayout.components
 
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import androidx.compose.runtime.Composable
@@ -22,10 +23,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.startActivity
+import com.innoveworkshop.plinko.PlinkoGameActivity
 import pt.iade.games.detectiveribbitlayout.R
 
 @Composable
 fun RibbitProgressBar(Steps: Int) {
+    val context = LocalContext.current
+    val intent = Intent(context, PlinkoGameActivity::class.java)
     // State to manage progress
     val currentProgress = remember { mutableStateOf(Steps.toInt()/100f) }
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -77,6 +83,9 @@ fun RibbitProgressBar(Steps: Int) {
                 // Increment progress by 0.1 (clamped between 0 and 1)
                 if (currentProgress.value < 1.0f) {
                     currentProgress.value += 0.1f
+                }
+                if(currentProgress.value >= 1){
+                    context.startActivity(intent)
                 }
             }
         ) {

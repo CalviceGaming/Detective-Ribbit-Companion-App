@@ -1,18 +1,15 @@
-package com.innoveworkshop.gametest.assets
+package com.innoveworkshop.plinko.assets
 
 import android.graphics.Color
-import android.os.Looper
-import android.util.Log
-import com.innoveworkshop.gametest.PlinkoGameActivity
-import com.innoveworkshop.gametest.engine.Circle
-import com.innoveworkshop.gametest.engine.GameSurface
-import com.innoveworkshop.gametest.engine.Physics
-import com.innoveworkshop.gametest.engine.Vector
+import com.innoveworkshop.plinko.engine.Circle
+import com.innoveworkshop.plinko.engine.GameSurface
+import com.innoveworkshop.plinko.engine.Physics
+import com.innoveworkshop.plinko.engine.Vector
 
 class PlinkoBall(
     xPos: Float,
     val weigth: Float,
-    val listOfObs: MutableList<Circle?>,
+    val listOfObs: MutableList<com.innoveworkshop.plinko.engine.Circle?>,
     val listOfMult: MutableList<Multiplier?>
 ): Circle(xPos, 20f, 35f, Color.RED, Vector(0f,0f)){
     var time = 0f

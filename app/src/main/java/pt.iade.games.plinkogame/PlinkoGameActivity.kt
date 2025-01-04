@@ -1,4 +1,4 @@
-package com.innoveworkshop.gametest
+package com.innoveworkshop.plinko
 
 import android.graphics.Color
 import android.os.Bundle
@@ -8,15 +8,12 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.innoveworkshop.gametest.assets.Multiplier
-import com.innoveworkshop.gametest.assets.PlinkoBall
-import com.innoveworkshop.gametest.engine.Circle
-import com.innoveworkshop.gametest.engine.GameObject
-import com.innoveworkshop.gametest.engine.GameSurface
-import com.innoveworkshop.gametest.engine.Physics
-import com.innoveworkshop.gametest.engine.Rectangle
-import com.innoveworkshop.gametest.engine.Vector
-import org.w3c.dom.Text
+import com.innoveworkshop.plinko.assets.Multiplier
+import com.innoveworkshop.plinko.assets.PlinkoBall
+import com.innoveworkshop.plinko.engine.Circle
+import com.innoveworkshop.plinko.engine.GameObject
+import com.innoveworkshop.plinko.engine.GameSurface
+import com.innoveworkshop.plinko.engine.Vector
 import pt.iade.games.detectiveribbitlayout.R
 import kotlin.math.sqrt
 import kotlin.random.Random

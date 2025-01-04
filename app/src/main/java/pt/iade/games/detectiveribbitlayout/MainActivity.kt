@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentContainer
+import com.innoveworkshop.gametest.BowlingGameActivity
+import com.innoveworkshop.plinko.PlinkoGameActivity
 import pt.iade.games.detectiveribbitlayout.controllers.APIRequest
 import pt.iade.games.detectiveribbitlayout.controllers.Saves
 import pt.iade.games.detectiveribbitlayout.models.Player
