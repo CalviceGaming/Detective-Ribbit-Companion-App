@@ -32,7 +32,7 @@ fun CollectiblesComposable(
 
     val predefinedCollectibles = listOf(
         Collectible(1, "Frog Statue", R.drawable.ribbitstatue, "A good looking statue that makes the apartment look better", 1, false),
-        Collectible(2, "Something", R.drawable.ribbit, "Something Something that Something", 1, false)
+        Collectible(2, "Bowling Pin", R.drawable.bowling_pin, "A Bowling Pin used to kill someone", 1, false)
         // Add more collectibles as needed
     )
 

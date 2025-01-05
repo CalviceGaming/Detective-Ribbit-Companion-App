@@ -118,7 +118,7 @@ class BowlingGameActivity : AppCompatActivity() {
                 val savedPlayer = saves.loadPlayerFromFile(this@BowlingGameActivity)
 
                 // Create the hard-coded collectible
-                val hardCodedCollectable = Collectible(2, "Something", R.drawable.bowling_ball, "Something Something that Something", 1, false)
+                val hardCodedCollectable = Collectible(2, "Bowling Pin", R.drawable.bowling_pin, "A Bowling Pin used to kill someone", 1, false)
 
                 // Check if the player ID is valid
                 if (savedPlayer!!.id != 0) {
