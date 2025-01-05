@@ -19,45 +19,71 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="142dp"
-        android:layout_height="182dp"
-        android:layout_marginEnd="36dp"
-        android:src="@drawable/fly_mafia_img"
+        android:layout_width="109dp"
+        android:layout_height="106dp"
+        android:layout_marginEnd="248dp"
+        android:src="@drawable/flymafiaphoto"
         android:tag="Incriminating Photo"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleContainer"
-        app:layout_constraintVertical_bias="0.048" />
+        app:layout_constraintVertical_bias="0.133" />
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="159dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="24dp"
-        android:src="@drawable/frog"
+        android:layout_width="172dp"
+        android:layout_height="114dp"
+        android:layout_marginStart="204dp"
+        android:src="@drawable/gun"
         android:tag="Gun"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.414" />
+        app:layout_constraintVertical_bias="0.293" />
 
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="173dp"
         android:layout_height="136dp"
-        android:layout_marginBottom="136dp"
-        android:src="@drawable/photo_stack_house"
+        android:layout_marginBottom="216dp"
+        android:src="@drawable/funny_pipe"
         android:tag="Sus Pipe"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.697"
+        app:layout_constraintHorizontal_bias="0.067"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="173dp"
+        android:layout_height="136dp"
+        android:layout_marginBottom="284dp"
+        android:src="@drawable/foot_prints"
+        android:tag="Foot Prints"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.932"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="173dp"
+        android:layout_height="136dp"
+        android:layout_marginBottom="60dp"
+        android:src="@drawable/mysterious_person"
+        android:tag="Mysterious Person"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.617"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/backButton"
