@@ -18,6 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import pt.iade.games.detectiveribbitlayout.R
 import pt.iade.games.detectiveribbitlayout.models.Collectible
 
@@ -28,6 +30,7 @@ fun CollectiblePlaceHolder(
     collectible: Collectible,
     onClick: () -> Unit = {}
 ){
+    val customFont = FontFamily(Font(R.font.typewriter_font))
     Box(
         modifier = modifier
             .clickable { onClick() }
@@ -62,6 +65,8 @@ fun CollectiblePlaceHolder(
                                 .padding(bottom = 4.dp)
                         )
                         Text(
+
+                            //fontFamily = customFont,
                             text = collectible.name,
                             fontSize = (collectible.placeholderSize * 17).sp
                         )
